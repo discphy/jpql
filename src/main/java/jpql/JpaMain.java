@@ -22,16 +22,24 @@ public class JpaMain {
             member.setUsername("TeamA");
             member.setTeam(team);
             member.setAge(10);
+            member.setType(MemberType.ADMIN);
 
             em.persist(member);
 
             em.flush();
             em.clear();
 
-            String query = "select (select avg(m1.age) from Member m1) as avgAge from Member m left join Team t on m.username = t.name";
-            List<Member> result = em.createQuery(query, Member.class).getResultList();
+            String query = "select m.username, 'HELLO', TRUE from Member m " +
+                    "where m.type = :userType";
+            List<Object[]> resultList = em.createQuery(query)
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
 
-            System.out.println("result = " + result);
+            for (Object[] objects : resultList) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+            }
 
             tx.commit();
         } catch (Exception e) {
