@@ -29,7 +29,9 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            List<String> resultList = em.createQuery("select nullif(m.username, '관리자') from Member m", String.class)
+            String query = "select substring(m.username, 2, 3) From Member m";
+
+            List<String> resultList = em.createQuery(query, String.class)
                     .getResultList();
 
             System.out.println("resultList = " + resultList);
